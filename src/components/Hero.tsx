@@ -10,19 +10,21 @@ const Hero = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 gradient-hero"></div>
       </div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4">
         <div className="max-w-4xl">
-          <h1 className="font-playfair text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            <span className="text-gradient">Manicura</span>
+          <h1 className="font-playfair text-5xl md:text-7xl font-bold mb-6 leading-tight drop-shadow-lg">
+            <span className="text-white">Manicura</span>
             <br />
-            <span className="text-foreground">Profesional</span>
+            <span className="text-white">Profesional</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl leading-relaxed drop-shadow-md">
             Diseños únicos, técnicas avanzadas y productos de alta calidad 
             para tus uñas perfectas en Madrid.
           </p>
@@ -50,8 +52,8 @@ const Hero = () => {
                 <Star className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-foreground">4.9/5</div>
-                <div className="text-sm text-muted-foreground">Valoración</div>
+                <div className="text-2xl font-bold text-white drop-shadow-sm">4.9/5</div>
+                <div className="text-sm text-white/80">Valoración</div>
               </div>
             </div>
             
@@ -60,8 +62,8 @@ const Hero = () => {
                 <Users className="w-6 h-6 text-accent" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-foreground">1200+</div>
-                <div className="text-sm text-muted-foreground">Clientas</div>
+                <div className="text-2xl font-bold text-white drop-shadow-sm">1200+</div>
+                <div className="text-sm text-white/80">Clientas</div>
               </div>
             </div>
             
@@ -70,8 +72,8 @@ const Hero = () => {
                 <Award className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-foreground">5 años</div>
-                <div className="text-sm text-muted-foreground">Experiencia</div>
+                <div className="text-2xl font-bold text-white drop-shadow-sm">5 años</div>
+                <div className="text-sm text-white/80">Experiencia</div>
               </div>
             </div>
           </div>
