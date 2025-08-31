@@ -61,7 +61,29 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom brand colors
+				'rose-elegant': 'hsl(var(--rose-elegant))',
+				'rose-soft': 'hsl(var(--rose-soft))',
+				'gold-luxury': 'hsl(var(--gold-luxury))',
+				'cream-warm': 'hsl(var(--cream-warm))',
+				'charcoal-soft': 'hsl(var(--charcoal-soft))'
+			},
+			fontFamily: {
+				'playfair': ['Playfair Display', 'serif'],
+				'inter': ['Inter', 'sans-serif'],
+				sans: ['Inter', 'sans-serif'],
+				serif: ['Playfair Display', 'serif']
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-secondary': 'var(--gradient-secondary)',
+				'gradient-hero': 'var(--gradient-hero)'
+			},
+			boxShadow: {
+				'elegant': 'var(--shadow-elegant)',
+				'subtle': 'var(--shadow-subtle)',
+				'glow': 'var(--shadow-glow)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
