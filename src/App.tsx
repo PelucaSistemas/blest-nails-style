@@ -15,30 +15,31 @@ import Servicios from "./pages/admin/Servicios";
 import Empleadas from "./pages/admin/Empleadas";
 import Gastos from "./pages/admin/Gastos";
 import Configuracion from "./pages/admin/Configuracion";
+import { isAuthenticated, getCurrentUser, User } from "./lib/pocketbase";
 
 const queryClient = new QueryClient();
-
-const isAuthenticated = () => {
-  return localStorage.getItem('blest_admin_auth') === 'true';
-};
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [auth, setAuth] = useState<boolean | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    setAuth(isAuthenticated());
+    const authenticated = isAuthenticated();
+    const currentUser = getCurrentUser();
+    setAuth(authenticated);
+    setUser(currentUser);
   }, []);
 
   if (auth === null) {
     return null;
   }
 
-  if (!auth) {
+  if (!auth || !user) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
-  return <AdminLayout>{children}</AdminLayout>;
+  return <AdminLayout user={user}>{children}</AdminLayout>;
 };
 
 const App = () => (
@@ -58,7 +59,7 @@ const App = () => (
           <Route path="/admin/servicios" element={<AdminRoute><Servicios /></AdminRoute>} />
           <Route path="/admin/empleadas" element={<AdminRoute><Empleadas /></AdminRoute>} />
           <Route path="/admin/gastos" element={<AdminRoute><Gastos /></AdminRoute>} />
-          <Route path="/admin/config" element={<AdminRoute><Configuracion /></AdminRoute>} />
+          <Route path="/admin/config" element={<AdminRoute>< Configuracion /></AdminRoute>} />
           
           {/* Redirect old routes */}
           <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />

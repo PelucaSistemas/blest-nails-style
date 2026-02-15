@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Lock, Eye, EyeOff } from 'lucide-react';
-
-const ADMIN_SECRET = 'blest2024';
+import { Lock, Eye, EyeOff, User } from 'lucide-react';
+import { login } from '@/lib/pocketbase';
 
 export default function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -20,13 +20,12 @@ export default function Login() {
     setLoading(true);
     setError('');
 
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if (password === ADMIN_SECRET) {
-      localStorage.setItem('blest_admin_auth', 'true');
+    try {
+      await login(email, password);
       navigate('/admin');
-    } else {
-      setError('Clave incorrecta');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Email o contraseña incorrectos');
     }
     setLoading(false);
   };
@@ -39,26 +38,42 @@ export default function Login() {
             <Lock className="w-8 h-8 text-white" />
           </div>
           <CardTitle className="text-2xl font-bold">Blest Admin</CardTitle>
-          <p className="text-muted-foreground text-sm">Ingresá tu clave de acceso</p>
+          <p className="text-muted-foreground text-sm">Ingresá tus credenciales</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <Label htmlFor="password">Clave de acceso</Label>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="tu@email.com"
+                  className="border-2 border-black pl-10"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="password">Contraseña</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Ingresá la clave"
+                  placeholder="••••••••"
                   className="border-2 border-black pr-10"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-9 text-gray-500 hover:text-black"
+                  className="absolute right-3 top-3 text-gray-500 hover:text-black"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -74,7 +89,7 @@ export default function Login() {
               disabled={loading}
               className="w-full bg-black text-white hover:bg-gray-800 border-2 border-black font-bold"
             >
-              {loading ? 'Verificando...' : 'Entrar'}
+              {loading ? 'Ingresando...' : 'Entrar'}
             </Button>
           </form>
 

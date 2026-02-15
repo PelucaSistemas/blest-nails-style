@@ -16,6 +16,13 @@ interface Servicio {
   precio: number;
 }
 
+interface Empleado {
+  id: string;
+  nombre: string;
+  email: string;
+  telefono: string;
+}
+
 const timeSlots = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
   "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30"
@@ -24,26 +31,32 @@ const timeSlots = [
 export default function Reservar() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedService, setSelectedService] = useState<Servicio | null>(null);
+  const [selectedProfessional, setSelectedProfessional] = useState<Empleado | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState("");
   const [clientData, setClientData] = useState({ nombre: "", email: "", telefono: "" });
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [servicios, setServicios] = useState<Servicio[]>([]);
+  const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchServicios = async () => {
+    const fetchData = async () => {
       try {
-        const result = await pb.collection('servicios').getFullList();
-        setServicios(result as unknown as Servicio[]);
+        const [serviciosResult, empleadosResult] = await Promise.all([
+          pb.collection('servicios').getFullList(),
+          pb.collection('empleados').getFullList()
+        ]);
+        setServicios(serviciosResult as unknown as Servicio[]);
+        setEmpleados(empleadosResult as unknown as Empleado[]);
       } catch (error) {
-        console.error("Error fetching servicios:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchServicios();
+    fetchData();
   }, []);
 
   const serviciosAgrupados = servicios.reduce((acc: Record<string, Servicio[]>, servicio) => {
@@ -64,7 +77,7 @@ export default function Reservar() {
   const canProceed = () => {
     switch (currentStep) {
       case 1: return selectedService !== null;
-      case 2: return true; 
+      case 2: return selectedProfessional !== null || true; // Optional selection
       case 3: return selectedDate !== undefined;
       case 4: return selectedTime !== "";
       case 5: return clientData.nombre && clientData.telefono;
@@ -86,6 +99,7 @@ export default function Reservar() {
         cliente_telefono: clientData.telefono,
         cliente_email: clientData.email,
         servicio_id: selectedService.id,
+        empleado_id: selectedProfessional?.id || null,
         fecha_hora: fechaHora.toISOString().split('T')[0],
         estado: 'pendiente',
       });
@@ -245,10 +259,32 @@ export default function Reservar() {
             )}
 
             {currentStep === 2 && (
-              <div className="text-center py-8">
-                <p className="text-gray-600 mb-4">Te asignaremos el primer manicurista disponible</p>
-                <User className="w-16 h-16 mx-auto text-gray-400" />
-              </div>
+              <RadioGroup
+                value={selectedProfessional?.id || ""}
+                onValueChange={(value) => {
+                  const profesional = empleados.find((p: Empleado) => p.id === value);
+                  setSelectedProfessional(profesional || null);
+                }}
+              >
+                <div className="grid gap-4">
+                  {empleados.length === 0 ? (
+                    <p className="text-center text-gray-500">No hay profesionales disponibles</p>
+                  ) : (
+                    empleados.map((profesional: Empleado) => (
+                      <div
+                        key={profesional.id}
+                        className="flex items-center space-x-4 p-4 rounded-lg border-4 border-black hover:bg-gray-50 transition-colors"
+                      >
+                        <RadioGroupItem value={profesional.id} id={profesional.id} className="border-2 border-black" />
+                        <Label htmlFor={profesional.id} className="flex-1 cursor-pointer">
+                          <div className="font-bold text-black">{profesional.nombre}</div>
+                          <div className="text-sm text-gray-600">{profesional.email}</div>
+                        </Label>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </RadioGroup>
             )}
 
             {currentStep === 3 && (

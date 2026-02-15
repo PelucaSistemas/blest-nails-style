@@ -12,7 +12,7 @@ const Footer = () => {
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
               Tu salón de manicura de confianza en Palermo, Buenos Aires. 
-              Especialistas en diseños únicos y cuidado profesional de uñas.
+              Somos especialistas en diseños únicos y cuidado profesional de uñas.
             </p>
             <div className="flex space-x-3">
               <a 
@@ -78,12 +78,12 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-400">
-              © 2024 Blest. Todos los derechos reservados.
+              © 2026 Blest. Todos los derechos reservados.
             </p>
             <p className="text-sm text-gray-400 flex items-center space-x-1">
               <span>Hecho con</span>
               <Heart className="w-4 h-4 text-primary fill-current" />
-              <span>en Madrid</span>
+              <span>en Buenos Aires</span>
             </p>
           </div>
         </div>

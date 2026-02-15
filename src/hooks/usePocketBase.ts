@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { pb, PB_URL } from '@/lib/pocketbase';
+import { pb, getToken } from '@/lib/pocketbase';
 
 interface PocketBaseRecord {
   id: string;
@@ -16,12 +16,19 @@ export function usePocketBase({ collection, autoFetch = false }: UsePocketBaseOp
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      pb.authStore.save(token, null);
+    }
+  }, []);
+
   const fetchRecords = useCallback(async (query?: string) => {
     setLoading(true);
     setError(null);
     try {
       const result = await pb.collection(collection).getList(1, 100, {
-        sort: '-created',
+        sort: '-id',
         filter: query || '',
       });
       setRecords(result.items as PocketBaseRecord[]);

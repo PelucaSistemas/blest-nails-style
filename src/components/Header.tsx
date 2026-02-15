@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone, Settings } from "lucide-react";
+import { isAuthenticated, getCurrentUser, logout } from "@/lib/pocketbase";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    setIsAdmin(localStorage.getItem('blest_admin_auth') === 'true');
+    const checkAuth = () => {
+      const auth = isAuthenticated();
+      const user = getCurrentUser();
+      setIsAdmin(auth && user?.role === 'admin');
+    };
+    checkAuth();
   }, []);
 
   return (

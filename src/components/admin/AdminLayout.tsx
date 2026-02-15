@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { 
@@ -11,25 +11,39 @@ import {
   Settings,
   Menu,
   X,
-  LogOut
+  LogOut,
+  UserCircle
 } from 'lucide-react';
+import { logout, User } from '@/lib/pocketbase';
 
 const menuItems = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/admin/turnos', label: 'Turnos', icon: Calendar },
   { path: '/admin/servicios', label: 'Servicios', icon: Scissors },
   { path: '/admin/empleadas', label: 'Empleadas', icon: Users },
-  { path: '/admin/gastos', label: 'Gastos', icon: Receipt },
-  { path: '/admin/config', label: 'Configuración', icon: Settings },
+  { path: '/admin/gastos', label: 'Gastos', icon: Receipt, roles: ['admin'] },
+  { path: '/admin/config', label: 'Configuración', icon: Settings, roles: ['admin'] },
 ];
 
 interface AdminLayoutProps {
   children: React.ReactNode;
+  user: User;
 }
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
+export default function AdminLayout({ children, user }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login');
+  };
+
+  const filteredMenuItems = menuItems.filter(item => {
+    if (!item.roles) return true;
+    return item.roles.includes(user.role);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -56,7 +70,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
         
         <nav className="p-4 space-y-2">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             return (
@@ -78,7 +92,22 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
+        {/* User Info & Logout */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800 space-y-3">
+          <div className="flex items-center gap-3 px-2">
+            <UserCircle className="w-8 h-8 text-gray-400" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white truncate">{user.nombre}</p>
+              <p className="text-xs text-gray-400 capitalize">{user.role}</p>
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-3 w-full text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-gray-800"
+          >
+            <LogOut className="w-5 h-5" />
+            Cerrar sesión
+          </button>
           <Link
             to="/"
             className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white transition-colors"
