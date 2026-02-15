@@ -1,39 +1,70 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Palette, Shield, Clock } from "lucide-react";
-import servicesImage from "@/assets/services.jpg";
+import { Link } from "react-router-dom";
+import { Sparkles, Palette, Shield, Hand, Footprints, Eye, Scissors } from "lucide-react";
+import servicesImage from "@/assets/gallery-3.jpg";
 
 const Services = () => {
-  const services = [
+  const allServices = [
     {
+      category: "Manos",
+      icon: <Hand className="w-8 h-8" />,
+      title: "Manicuría",
+      description: "Cuidado completo. Repujado, cutículas, limado e hidratación.",
+      price: "$29.000"
+    },
+    {
+      category: "Manos",
       icon: <Sparkles className="w-8 h-8" />,
-      title: "Manicura Clásica",
-      description: "Cuidado completo de uñas con forma, cutículas y esmaltado profesional.",
-      price: "25€",
-      duration: "45 min"
+      title: "Semi-permanente",
+      description: "Esmaltado duradero hasta 3 semanas.",
+      price: "$32.000"
     },
     {
-      icon: <Palette className="w-8 h-8" />,
-      title: "Nail Art Personalizado",
-      description: "Diseños únicos y creativos adaptados a tu estilo personal.",
-      price: "35€",
-      duration: "60 min"
-    },
-    {
+      category: "Manos",
       icon: <Shield className="w-8 h-8" />,
-      title: "Manicura Semi-permanente",
-      description: "Esmaltado duradero con tecnología gel que dura hasta 3 semanas.",
-      price: "30€",
-      duration: "50 min"
+      title: "Kapping Uñas Cortas",
+      description: "Refuerzo en gel sobre uña natural. Ideal para uñas débiles.",
+      price: "$38.000"
     },
     {
-      icon: <Clock className="w-8 h-8" />,
-      title: "Manicura Express",
-      description: "Servicio rápido perfecto para un retoque antes de eventos importantes.",
-      price: "20€",
-      duration: "30 min"
+      category: "Manos",
+      icon: <Palette className="w-8 h-8" />,
+      title: "Soft Gel",
+      description: "Extensiones con tips de gel. Rápidas y ligeras.",
+      price: "$44.000"
+    },
+    {
+      category: "Pies",
+      icon: <Footprints className="w-8 h-8" />,
+      title: "Pedicuría",
+      description: "Remoción de durezas y callos con bisturí.",
+      price: "$36.000"
+    },
+    {
+      category: "Pies",
+      icon: <Sparkles className="w-8 h-8" />,
+      title: "Belleza de Pies",
+      description: "Exfoliación, hidratación y esmaltado.",
+      price: "$33.000"
+    },
+    {
+      category: "Cejas",
+      icon: <Eye className="w-8 h-8" />,
+      title: "Perfilado de Cejas",
+      description: "Depilación con cera o pinza. Forma acorde al rostro.",
+      price: "$23.000"
+    },
+    {
+      category: "Cejas",
+      icon: <Sparkles className="w-8 h-8" />,
+      title: "Lifting de Pestañas",
+      description: "Alarga y da curva natural. Con bótox y tinte opcional.",
+      price: "$41.000"
     }
   ];
+
+  const services = allServices.slice(0, 4);
 
   return (
     <section id="servicios" className="py-20 bg-secondary/20">
@@ -97,14 +128,23 @@ const Services = () => {
                 </CardDescription>
                 <div className="space-y-2">
                   <div className="text-2xl font-bold text-primary">{service.price}</div>
-                  <div className="text-sm text-muted-foreground">Duración: {service.duration}</div>
                 </div>
-                <Button variant="outline" className="w-full hover:bg-primary/5">
-                  Reservar
-                </Button>
+                <Link to="/reservar">
+                  <Button variant="outline" className="w-full hover:bg-primary/5">
+                    Reservar
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link to="/reservar">
+            <Button size="lg" className="shadow-elegant">
+              Ver Todos los Servicios
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

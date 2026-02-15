@@ -2,29 +2,34 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, Share2, ZoomIn } from "lucide-react";
-import nailArtImage from "@/assets/nail-art.jpg";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery2 from "@/assets/gallery-2.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery4 from "@/assets/gallery-4.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+import gallery6 from "@/assets/gallery-6.jpg";
+import gallery7 from "@/assets/gallery-7.jpg";
+import gallery8 from "@/assets/gallery-8.jpg";
 
 const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState("todos");
 
   const categories = [
     { id: "todos", label: "Todos" },
-    { id: "clasica", label: "Clásica" },
-    { id: "nail-art", label: "Nail Art" },
-    { id: "semi-permanente", label: "Semi-permanente" },
-    { id: "eventos", label: "Eventos" }
+    { id: "manos", label: "Manos" },
+    { id: "pies", label: "Pies" },
+    { id: "nail-art", label: "Nail Art" }
   ];
 
-  // Simulando una galería de trabajos - en producción vendrían de una API o CMS
   const galleryItems = [
-    { id: 1, category: "nail-art", image: nailArtImage, title: "Diseño Floral Rosa", likes: 24 },
-    { id: 2, category: "clasica", image: nailArtImage, title: "Manicura Francesa", likes: 18 },
-    { id: 3, category: "semi-permanente", image: nailArtImage, title: "Degradado Sunset", likes: 32 },
-    { id: 4, category: "eventos", image: nailArtImage, title: "Nails de Boda", likes: 45 },
-    { id: 5, category: "nail-art", image: nailArtImage, title: "Geometric Gold", likes: 28 },
-    { id: 6, category: "clasica", image: nailArtImage, title: "Nude Elegante", likes: 22 },
-    { id: 7, category: "semi-permanente", image: nailArtImage, title: "Rosa Brillante", likes: 35 },
-    { id: 8, category: "eventos", image: nailArtImage, title: "Glitter Party", likes: 29 }
+    { id: 1, category: "nail-art", image: gallery1, title: "Nail Art Diseño", likes: 24 },
+    { id: 2, category: "manos", image: gallery2, title: "Semipermanente Rosa", likes: 18 },
+    { id: 3, category: "nail-art", image: gallery3, title: "Degradado Sunset", likes: 32 },
+    { id: 4, category: "manos", image: gallery4, title: "Kapping Natural", likes: 45 },
+    { id: 5, category: "nail-art", image: gallery5, title: "French Moderno", likes: 28 },
+    { id: 6, category: "pies", image: gallery6, title: "Pediccura SPA", likes: 22 },
+    { id: 7, category: "manos", image: gallery7, title: "Soft Gel", likes: 35 },
+    { id: 8, category: "nail-art", image: gallery8, title: "Glitter Party", likes: 29 }
   ];
 
   const filteredItems = selectedCategory === "todos" 

@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Phone, MapPin } from "lucide-react";
+import { Menu, X, Phone, Settings } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(localStorage.getItem('blest_admin_auth') === 'true');
+  }, []);
 
   return (
     <header className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50 shadow-subtle">
@@ -34,11 +40,21 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Phone className="w-4 h-4" />
-              <span>+34 123 456 789</span>
+              <span>11-4916-6036</span>
             </div>
-            <Button variant="default" className="shadow-elegant">
-              Reservar Cita
-            </Button>
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="outline" size="sm" className="border-2 border-black">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Admin
+                </Button>
+              </Link>
+            )}
+            <Link to="/reservar">
+              <Button variant="default" className="shadow-elegant">
+                Reservar Cita
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -85,11 +101,13 @@ const Header = () => {
               <div className="pt-4 space-y-2">
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <Phone className="w-4 h-4" />
-                  <span>+34 123 456 789</span>
+                  <span>11-4916-6036</span>
                 </div>
-                <Button variant="default" className="w-full shadow-elegant">
-                  Reservar Cita
-                </Button>
+                <Link to="/reservar" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="default" className="w-full shadow-elegant">
+                    Reservar Cita
+                  </Button>
+                </Link>
               </div>
             </nav>
           </div>

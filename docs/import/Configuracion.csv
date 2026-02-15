@@ -1,0 +1,5 @@
+Id,Clave,Valor,Descripcion
+impuesto_porcentaje,21,Porcentaje de impuestos
+ganancia_deseada,30,Porcentaje de ganancia deseada
+horas_laborables_mes,160,Horas laborables por mes por persona
+alquiler_mensual,0,Costo de alquiler mensual

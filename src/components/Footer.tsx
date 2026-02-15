@@ -1,4 +1,4 @@
-import { Heart, Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
+import { Heart, Instagram, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -8,24 +8,20 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="font-playfair text-2xl font-bold">
-              <span className="text-gradient">Blest</span>
+              <span className="text-gradient">Blest</span> Nail Spa
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
-              Tu salón de manicura de confianza en Madrid. 
+              Tu salón de manicura de confianza en Palermo, Buenos Aires. 
               Especialistas en diseños únicos y cuidado profesional de uñas.
             </p>
             <div className="flex space-x-3">
               <a 
-                href="#" 
+                href="https://instagram.com/blestnailspa" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center hover:shadow-glow transition-all duration-300"
               >
                 <Instagram className="w-5 h-5 text-white" />
-              </a>
-              <a 
-                href="#" 
-                className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center hover:shadow-glow transition-all duration-300"
-              >
-                <Facebook className="w-5 h-5 text-white" />
               </a>
             </div>
           </div>
@@ -60,23 +56,18 @@ const Footer = () => {
             <div className="space-y-3 text-sm text-gray-300">
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
-                <span>Calle Gran Vía, 25, 2º piso<br />28013 Madrid, España</span>
+                <span>Av. Scalabrini Ortiz 2446<br />Palermo, Buenos Aires</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>+34 123 456 789</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Mail className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>info@blest-nails.com</span>
+                <span>11-4916-6036</span>
               </div>
             </div>
 
             <div className="pt-4">
               <h4 className="font-semibold text-sm mb-2">Horarios</h4>
               <div className="text-xs text-gray-400 space-y-1">
-                <p>Lun - Vie: 10:00 - 20:00</p>
-                <p>Sáb: 10:00 - 18:00</p>
+                <p>Lun - Sáb: 9:00 - 19:00</p>
                 <p>Dom: Cerrado</p>
               </div>
             </div>

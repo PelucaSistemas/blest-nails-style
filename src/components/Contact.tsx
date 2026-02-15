@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Phone, Mail, Clock, Instagram, Facebook } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Instagram } from "lucide-react";
 
 const Contact = () => {
   return (
@@ -34,7 +34,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground">Dirección</h4>
-                      <p className="text-muted-foreground">Calle Gran Vía, 25, 2º piso<br />28013 Madrid, España</p>
+                      <p className="text-muted-foreground">Av. Scalabrini Ortiz 2446<br />Palermo, Buenos Aires</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -46,7 +46,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground">Teléfono</h4>
-                      <p className="text-muted-foreground">+34 123 456 789</p>
+                      <p className="text-muted-foreground">11-4916-6036</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -57,8 +57,8 @@ const Contact = () => {
                       <Mail className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground">Email</h4>
-                      <p className="text-muted-foreground">info@blest-nails.com</p>
+                      <h4 className="font-semibold text-foreground">WhatsApp</h4>
+                      <p className="text-muted-foreground">11-4916-6036</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -71,8 +71,7 @@ const Contact = () => {
                     <div>
                       <h4 className="font-semibold text-foreground">Horarios</h4>
                       <div className="text-muted-foreground text-sm">
-                        <p>Lun - Vie: 10:00 - 20:00</p>
-                        <p>Sáb: 10:00 - 18:00</p>
+                        <p>Lun - Sáb: 9:00 - 19:00</p>
                         <p>Dom: Cerrado</p>
                       </div>
                     </div>
@@ -84,15 +83,14 @@ const Contact = () => {
             {/* Social Media */}
             <div>
               <h3 className="font-playfair text-xl font-bold mb-4 text-foreground">
-                Síguenos en Redes
+                Síguenos en Instagram
               </h3>
               <div className="flex space-x-4">
-                <Button variant="outline" size="icon" className="hover:bg-primary/5">
-                  <Instagram className="w-5 h-5" />
-                </Button>
-                <Button variant="outline" size="icon" className="hover:bg-primary/5">
-                  <Facebook className="w-5 h-5" />
-                </Button>
+                <a href="https://instagram.com/blestnailspa" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="icon" className="hover:bg-primary/5">
+                    <Instagram className="w-5 h-5" />
+                  </Button>
+                </a>
               </div>
             </div>
           </div>
@@ -103,64 +101,26 @@ const Contact = () => {
               <CardTitle className="font-playfair text-2xl">Reserva tu Cita</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Nombre *
-                  </label>
-                  <Input placeholder="Tu nombre completo" className="border-border/50" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Teléfono *
-                  </label>
-                  <Input placeholder="+34 123 456 789" className="border-border/50" />
-                </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground text-center">
+                  ¿Querés reservar tu turno? Escribinos por WhatsApp y te ayudamos a coordinar tu cita.
+                </p>
               </div>
               
-              <div>
-                <label className="text-sm font-medium text-foreground mb-2 block">
-                  Email *
-                </label>
-                <Input type="email" placeholder="tu.email@ejemplo.com" className="border-border/50" />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Servicio
-                  </label>
-                  <select className="w-full px-3 py-2 border border-border/50 rounded-md bg-background text-foreground">
-                    <option>Manicura Clásica</option>
-                    <option>Nail Art Personalizado</option>
-                    <option>Semi-permanente</option>
-                    <option>Manicura Express</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Fecha Preferida
-                  </label>
-                  <Input type="date" className="border-border/50" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-foreground mb-2 block">
-                  Mensaje
-                </label>
-                <Textarea 
-                  placeholder="Cuéntanos qué tipo de diseño tienes en mente..."
-                  className="border-border/50 min-h-[100px]"
-                />
-              </div>
-
-              <Button className="w-full shadow-elegant">
-                Enviar Solicitud
-              </Button>
+              <a 
+                href="https://wa.me/1149166036?text=Hola!%20Quiero%20reservar%20un%20turno" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Button className="w-full shadow-elegant bg-green-600 hover:bg-green-700">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Reservar por WhatsApp
+                </Button>
+              </a>
 
               <p className="text-xs text-muted-foreground text-center">
-                Te contactaremos en un plazo máximo de 24 horas para confirmar tu cita.
+                Lunes a Sábados de 9 a 19 hs.
               </p>
             </CardContent>
           </Card>

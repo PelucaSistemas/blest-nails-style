@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, Award, Users } from "lucide-react";
-import heroImage from "@/assets/hero-bg.jpg";
+import heroImage from "@/assets/gallery-1.jpg";
 
 const Hero = () => {
   return (
@@ -25,24 +26,28 @@ const Hero = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl leading-relaxed drop-shadow-md">
-            Diseños únicos, técnicas avanzadas y productos de alta calidad 
-            para tus uñas perfectas en Madrid.
+            Uñas perfectas en Palermo, Buenos Aires. Diseños únicos, 
+            técnicas avanzadas y productos de alta calidad.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-6 shadow-elegant hover:shadow-glow transition-all duration-300"
-            >
-              Reservar Cita Ahora
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="text-lg px-8 py-6 border-2 border-primary/20 hover:border-primary/40 hover:bg-primary/5"
-            >
-              Ver Galería
-            </Button>
+            <Link to="/reservar">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 shadow-elegant hover:shadow-glow transition-all duration-300"
+              >
+                Reservar Cita Ahora
+              </Button>
+            </Link>
+            <a href="#galeria">
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="text-lg px-8 py-6 border-2 border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+              >
+                Ver Galería
+              </Button>
+            </a>
           </div>
 
           {/* Stats */}
@@ -62,7 +67,7 @@ const Hero = () => {
                 <Users className="w-6 h-6 text-accent" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-white drop-shadow-sm">1200+</div>
+                <div className="text-2xl font-bold text-white drop-shadow-sm">2000+</div>
                 <div className="text-sm text-white/80">Clientas</div>
               </div>
             </div>
@@ -72,7 +77,7 @@ const Hero = () => {
                 <Award className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-white drop-shadow-sm">5 años</div>
+                <div className="text-2xl font-bold text-white drop-shadow-sm">5+ años</div>
                 <div className="text-sm text-white/80">Experiencia</div>
               </div>
             </div>

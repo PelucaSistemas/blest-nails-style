@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NocoDB Silent Login & Fetch</title>
+</head>
+<body>
+  <h2>📋 Fetched Records</h2>
+  <pre id="output">Loading...</pre>
+
+  <script>
+    (async () => {
+      const token = "iSPQZ-_DKyE3gNqFJGkPwjEADQtrwnTzyfXw7ISU"; //  "oD1Jn4qHHzGezmrLAj9RaOHfq3hWO-ySbDvjTaZT"
+      const signinUrl = "https://nocodb.pelucasistemas.com.ar/api/v1/auth/user/signin";
+      const recordsUrl = "https://nocodb.pelucasistemas.com.ar/api/v2/tables/mk31xm09ctm9l5s/records";
+      const viewId = "vwx2o7jvdekfiu55";
+
+      try {
+   
+        console.log("🔐 JWT Token:", token);
+
+        // Step 2: Fetch records using token
+        const recordsResponse = await fetch(`${recordsUrl}?offset=0&limit=25&where=&viewId=${viewId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "xc-token": token
+          }
+        });
+
+        const recordsData = await recordsResponse.json();
+
+        if (!recordsResponse.ok) {
+          document.getElementById("output").textContent = "❌ Fetch failed: " + JSON.stringify(recordsData);
+          return;
+        }
+
+        // Step 3: Display records
+        document.getElementById("output").textContent = JSON.stringify(recordsData, null, 2);
+      } catch (err) {
+        document.getElementById("output").textContent = "❌ Network error: " + err.message;
+      }
+
+      try {
+    var testSeguridad = {
+      "categoria": "Manicuria",
+      "oldID": "52192",
+      "nombre": "Manicura sin esmaltado",
+      "descripcion": "Incluye repujado, retirado de cut�culas, limado y/o corte de u�as, humectaci�n.",
+      "duracion": null,
+      "precio": 22000,
+      "enlace_reserva": "https://www.wonoma.com/es-AR/salon/blest-nail-spa/servicio/52192-manicuria-sin-esmaltado#reservar",
+      "Solo Mujeres": false
+    }
+
+    var tableID = "mk31xm09ctm9l5s";
+    var baseUrl = "https://nocodb.pelucasistemas.com.ar/api"
+    
+    var callURL = baseUrl+"/v2/tables/"+tableID+"/records"
+    const response = await fetch(callURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "xc-token": token
+      },
+      body: JSON.stringify(testSeguridad)
+
+
+    });
+    console.log(response);
+    
+      } catch (error) {
+        
+      }
+    })();
+
+
+
+  </script>
+</body>
+</html>
