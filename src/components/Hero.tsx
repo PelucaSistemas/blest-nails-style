@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, Award, Users } from "lucide-react";
-import heroImage from "@/assets/gallery-1.jpg";
+import heroImage from "@/assets/Gemini_Generated_Image_pe5cvspe5cvspe5c.png";
 
 const Hero = () => {
   return (

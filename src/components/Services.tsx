@@ -1,70 +1,53 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Sparkles, Palette, Shield, Hand, Footprints, Eye, Scissors } from "lucide-react";
-import servicesImage from "@/assets/gallery-3.jpg";
+import servicesImage from "@/assets/blestnailspa/extracto/gallery-4.jpg";
+import { fetchServicios } from "@/lib/hornerodb";
+
+const getIconForCategory = (category: string) => {
+  const cat = category?.toLowerCase() || '';
+  if (cat.includes('mano') || cat.includes('manicuria')) return <Hand className="w-8 h-8" />;
+  if (cat.includes('pie') || cat.includes('pedicuria')) return <Footprints className="w-8 h-8" />;
+  if (cat.includes('ceja') || cat.includes('pestaña')) return <Eye className="w-8 h-8" />;
+  if (cat.includes('gel')) return <Palette className="w-8 h-8" />;
+  return <Sparkles className="w-8 h-8" />;
+};
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+  }).format(price);
+};
+
+interface Servicio {
+  id: string;
+  categoria?: string;
+  nombre: string;
+  descripcion?: string;
+  precio: number;
+}
 
 const Services = () => {
-  const allServices = [
-    {
-      category: "Manos",
-      icon: <Hand className="w-8 h-8" />,
-      title: "Manicuría",
-      description: "Cuidado completo. Repujado, cutículas, limado e hidratación.",
-      price: "$29.000"
-    },
-    {
-      category: "Manos",
-      icon: <Sparkles className="w-8 h-8" />,
-      title: "Semi-permanente",
-      description: "Esmaltado duradero hasta 3 semanas.",
-      price: "$32.000"
-    },
-    {
-      category: "Manos",
-      icon: <Shield className="w-8 h-8" />,
-      title: "Kapping Uñas Cortas",
-      description: "Refuerzo en gel sobre uña natural. Ideal para uñas débiles.",
-      price: "$38.000"
-    },
-    {
-      category: "Manos",
-      icon: <Palette className="w-8 h-8" />,
-      title: "Soft Gel",
-      description: "Extensiones con tips de gel. Rápidas y ligeras.",
-      price: "$44.000"
-    },
-    {
-      category: "Pies",
-      icon: <Footprints className="w-8 h-8" />,
-      title: "Pedicuría",
-      description: "Remoción de durezas y callos con bisturí.",
-      price: "$36.000"
-    },
-    {
-      category: "Pies",
-      icon: <Sparkles className="w-8 h-8" />,
-      title: "Belleza de Pies",
-      description: "Exfoliación, hidratación y esmaltado.",
-      price: "$33.000"
-    },
-    {
-      category: "Cejas",
-      icon: <Eye className="w-8 h-8" />,
-      title: "Perfilado de Cejas",
-      description: "Depilación con cera o pinza. Forma acorde al rostro.",
-      price: "$23.000"
-    },
-    {
-      category: "Cejas",
-      icon: <Sparkles className="w-8 h-8" />,
-      title: "Lifting de Pestañas",
-      description: "Alarga y da curva natural. Con bótox y tinte opcional.",
-      price: "$41.000"
-    }
-  ];
+  const [services, setServices] = useState<Servicio[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const services = allServices.slice(0, 4);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchServicios();
+        setServices(data.slice(0, 4) as Servicio[]);
+      } catch (error) {
+        console.error("Error fetching services", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
 
   return (
     <section id="servicios" className="py-20 bg-secondary/20">
@@ -118,16 +101,16 @@ const Services = () => {
             <Card key={index} className="text-center hover:shadow-elegant transition-all duration-300 border-border/50 hover:border-primary/20">
               <CardHeader className="pb-4">
                 <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4 text-white">
-                  {service.icon}
+                  {getIconForCategory(service.categoria || '')}
                 </div>
-                <CardTitle className="text-xl font-playfair">{service.title}</CardTitle>
+                <CardTitle className="text-xl font-playfair">{service.nombre}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <CardDescription className="text-muted-foreground leading-relaxed">
-                  {service.description}
+                  {service.descripcion}
                 </CardDescription>
                 <div className="space-y-2">
-                  <div className="text-2xl font-bold text-primary">{service.price}</div>
+                  <div className="text-2xl font-bold text-primary">{formatPrice(service.precio)}</div>
                 </div>
                 <Link to="/reservar">
                   <Button variant="outline" className="w-full hover:bg-primary/5">

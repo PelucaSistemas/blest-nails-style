@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, Clock, User, Sparkles, ChevronRight, ChevronLeft, Check, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, User, Sparkles, ChevronRight, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { pb } from "@/lib/pocketbase";
+import { fetchServicios, fetchEmpleados, createTurno } from "@/lib/hornerodb";
 
 interface Servicio {
   id: string;
-  categoria: string;
+  categoria?: string;
   nombre: string;
-  descripcion: string;
-  duracion_minutos: number;
+  descripcion?: string;
+  duracion_minutos?: number;
   precio: number;
 }
 
@@ -45,8 +45,8 @@ export default function Reservar() {
     const fetchData = async () => {
       try {
         const [serviciosResult, empleadosResult] = await Promise.all([
-          pb.collection('servicios').getFullList(),
-          pb.collection('empleados').getFullList()
+          fetchServicios(),
+          fetchEmpleados().catch(() => []) // Fallback in case empleados table is not strictly required yet
         ]);
         setServicios(serviciosResult as unknown as Servicio[]);
         setEmpleados(empleadosResult as unknown as Empleado[]);
@@ -77,7 +77,7 @@ export default function Reservar() {
   const canProceed = () => {
     switch (currentStep) {
       case 1: return selectedService !== null;
-      case 2: return selectedProfessional !== null || true; // Optional selection
+      case 2: return selectedProfessional !== null || true;
       case 3: return selectedDate !== undefined;
       case 4: return selectedTime !== "";
       case 5: return clientData.nombre && clientData.telefono;
@@ -94,13 +94,17 @@ export default function Reservar() {
       const [hours, minutes] = selectedTime.split(":");
       fechaHora.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
-      await pb.collection('turnos').create({
-        cliente_nombre: clientData.nombre,
-        cliente_telefono: clientData.telefono,
-        cliente_email: clientData.email,
+      const toHour = new Date(fechaHora);
+      toHour.setHours(toHour.getHours() + (selectedService?.duracion_minutos ? Math.ceil(selectedService.duracion_minutos / 60) : 1));
+
+      await createTurno({
+        client_name: clientData.nombre,
+        client_phone: clientData.telefono,
+        client_email: clientData.email,
         servicio_id: selectedService.id,
-        empleado_id: selectedProfessional?.id || null,
-        fecha_hora: fechaHora.toISOString().split('T')[0],
+        empleado_id: selectedProfessional?.id || null, // Might be null
+        from: fechaHora.toISOString(),
+        to: toHour.toISOString(),
         estado: 'pendiente',
       });
       
@@ -161,19 +165,20 @@ export default function Reservar() {
           <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center gap-2 text-black font-bold hover:underline">
               <ArrowLeft className="w-5 h-5" />
-              Volver
+              <span className="hidden sm:inline">Volver</span>
             </Link>
             <div className="font-playfair text-2xl font-bold">
               <span className="text-gradient">Blest</span>
             </div>
-            <div className="w-20"></div>
+            <div className="w-16"></div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
+      <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+        {/* Step Indicators - Always visible on mobile */}
+        <div className="mb-6 sm:mb-8 overflow-x-auto">
+          <div className="flex items-center justify-start sm:justify-center min-w-max pb-2">
             {[
               { number: 1, title: "Servicio", icon: Sparkles },
               { number: 2, title: "Profesional", icon: User },
@@ -186,17 +191,19 @@ export default function Reservar() {
               const isCompleted = currentStep > step.number;
               return (
                 <div key={step.number} className="flex items-center">
-                  <div className={`flex items-center justify-center w-12 h-12 rounded-full border-4 transition-all ${
-                    isCompleted ? "bg-black border-black text-white" : isActive ? "bg-white border-black text-black" : "border-white/50 text-white/70"
-                  }`}>
-                    {isCompleted ? <Check className="w-6 h-6" /> : <Icon className="w-6 h-6" />}
-                  </div>
-                  <div className="ml-2 hidden sm:block">
-                    <div className={`text-sm font-bold ${isActive || isCompleted ? "text-white" : "text-white/70"}`}>
-                      {step.title}
-                    </div>
-                  </div>
-                  {index < 4 && <ChevronRight className="w-5 h-5 text-white/50 mx-2" />}
+                  <button
+                    onClick={() => step.number < currentStep && setCurrentStep(step.number)}
+                    className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 transition-all ${
+                      isCompleted ? "bg-black border-black text-white" : isActive ? "bg-white border-black text-black" : "border-white/50 text-white/70"
+                    }`}
+                    disabled={step.number >= currentStep}
+                  >
+                    {isCompleted ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+                  </button>
+                  <span className={`ml-2 text-xs sm:text-sm font-bold hidden xs:inline ${isActive || isCompleted ? "text-white" : "text-white/70"}`}>
+                    {step.title}
+                  </span>
+                  {index < 4 && <ChevronRight className="w-4 h-4 text-white/50 mx-1 sm:mx-2" />}
                 </div>
               );
             })}
@@ -204,8 +211,8 @@ export default function Reservar() {
         </div>
 
         <Card className="bg-white/95 backdrop-blur-sm shadow-xl border-4 border-black">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-2xl font-bold text-black">
+          <CardHeader className="text-center pb-4 px-4 sm:px-6">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-black">
               {currentStep === 1 && "Selecciona tu servicio"}
               {currentStep === 2 && "Elige tu profesional"}
               {currentStep === 3 && "Selecciona la fecha"}
@@ -214,11 +221,11 @@ export default function Reservar() {
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="px-6 pb-8">
+          <CardContent className="px-4 sm:px-6 pb-6 sm:pb-8">
             {loading ? (
               <div className="text-center py-8">Cargando servicios...</div>
             ) : currentStep === 1 && (
-              <div className="space-y-6 max-h-[60vh] overflow-y-auto">
+              <div className="space-y-4 sm:space-y-6 max-h-[60vh] overflow-y-auto">
                 {Object.entries(serviciosAgrupados).map(([categoria, items]) => (
                   <div key={categoria}>
                     <h3 className="text-lg font-bold text-black mb-3 border-b-4 border-black pb-2 inline-block capitalize">
@@ -235,16 +242,16 @@ export default function Reservar() {
                         {items.map((servicio: Servicio) => (
                           <div
                             key={servicio.id}
-                            className="flex items-center space-x-3 p-4 rounded-lg border-4 border-black hover:bg-gray-50 transition-colors cursor-pointer"
+                            className="flex items-center space-x-3 p-4 sm:p-4 rounded-lg border-4 border-black hover:bg-gray-50 transition-colors cursor-pointer min-h-[60px]"
                           >
-                            <RadioGroupItem value={servicio.id} id={servicio.id} className="border-2 border-black" />
+                            <RadioGroupItem value={servicio.id} id={servicio.id} className="border-2 border-black w-5 h-5" />
                             <Label htmlFor={servicio.id} className="flex-1 cursor-pointer">
                               <div className="flex justify-between items-start">
                                 <div>
-                                  <div className="font-bold text-black">{servicio.nombre}</div>
+                                  <div className="font-bold text-black text-sm sm:text-base">{servicio.nombre}</div>
                                   <div className="text-sm text-gray-600">{servicio.duracion_minutos || 60} min</div>
                                 </div>
-                                <div className="text-xl font-bold text-black">
+                                <div className="text-lg sm:text-xl font-bold text-black">
                                   {formatPrice(servicio.precio)}
                                 </div>
                               </div>
@@ -268,17 +275,16 @@ export default function Reservar() {
               >
                 <div className="grid gap-4">
                   {empleados.length === 0 ? (
-                    <p className="text-center text-gray-500">No hay profesionales disponibles</p>
+                    <p className="text-center text-gray-500 py-4">No hay profesionales disponibles</p>
                   ) : (
                     empleados.map((profesional: Empleado) => (
                       <div
                         key={profesional.id}
-                        className="flex items-center space-x-4 p-4 rounded-lg border-4 border-black hover:bg-gray-50 transition-colors"
+                        className="flex items-center space-x-4 p-4 rounded-lg border-4 border-black hover:bg-gray-50 transition-colors min-h-[60px]"
                       >
-                        <RadioGroupItem value={profesional.id} id={profesional.id} className="border-2 border-black" />
-                        <Label htmlFor={profesional.id} className="flex-1 cursor-pointer">
+                        <RadioGroupItem value={profesional.id} id={profesional.id} className="border-2 border-black w-5 h-5" />
+                        <Label htmlFor={profesional.id} className="flex-1 cursor-pointer min-h-11 flex items-center">
                           <div className="font-bold text-black">{profesional.nombre}</div>
-                          <div className="text-sm text-gray-600">{profesional.email}</div>
                         </Label>
                       </div>
                     ))
@@ -289,17 +295,17 @@ export default function Reservar() {
 
             {currentStep === 3 && (
               <div className="flex justify-center">
-                <div className="border-4 border-black rounded-lg overflow-hidden">
-                  <div className="bg-black text-white text-center py-2 font-bold">
+                <div className="border-4 border-black rounded-lg overflow-hidden w-full max-w-sm">
+                  <div className="bg-black text-white text-center py-3 font-bold">
                     {selectedDate?.toLocaleDateString("es-AR", { month: "long", year: "numeric" })}
                   </div>
-                  <div className="grid grid-cols-7 gap-1 p-4 bg-white">
-                    {["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"].map(d => (
-                      <div key={d} className="text-center font-bold text-sm p-2">{d}</div>
+                  <div className="grid grid-cols-7 gap-1 p-2 sm:p-4 bg-white">
+                    {["D", "L", "M", "X", "J", "V", "S"].map((d, i) => (
+                      <div key={i} className="text-center font-bold text-xs sm:text-sm p-1 sm:p-2">{d}</div>
                     ))}
-                    {Array.from({ length: 35 }).map((_, i) => {
+                    {Array.from({ length: 42 }).map((_, i) => {
                       const date = new Date();
-                      date.setDate(i - date.getDay() + 1);
+                      date.setDate(i - 6 - date.getDay());
                       const isCurrentMonth = date.getMonth() === (selectedDate?.getMonth() || new Date().getMonth());
                       const isDisabled = isDateDisabled(date);
                       const isSelected = selectedDate?.toDateString() === date.toDateString();
@@ -309,7 +315,7 @@ export default function Reservar() {
                           key={i}
                           disabled={isDisabled || !isCurrentMonth}
                           onClick={() => setSelectedDate(date)}
-                          className={`p-2 text-center rounded-lg font-bold transition-all border-2 ${
+                          className={`p-2 sm:p-3 text-center rounded-lg font-bold transition-all border-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-sm ${
                             isSelected ? "bg-black text-white border-black" : 
                             isDisabled || !isCurrentMonth ? "text-gray-300 border-transparent cursor-not-allowed" :
                             "border-transparent hover:bg-gray-100"
@@ -335,14 +341,19 @@ export default function Reservar() {
                 </div>
 
                 <RadioGroup value={selectedTime} onValueChange={setSelectedTime}>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-3">
                     {timeSlots.map((time) => (
                       <div
                         key={time}
-                        className="flex items-center justify-center p-3 rounded-lg border-4 border-black hover:bg-gray-100 transition-colors cursor-pointer"
+                        className="flex items-center justify-center min-h-[48px] rounded-lg border-4 border-black hover:bg-gray-100 transition-colors cursor-pointer"
                       >
                         <RadioGroupItem value={time} id={time} className="sr-only" />
-                        <Label htmlFor={time} className={`cursor-pointer font-bold ${selectedTime === time ? "bg-black text-white px-4 py-2 rounded" : ""}`}>
+                        <Label 
+                          htmlFor={time} 
+                          className={`cursor-pointer font-bold w-full h-full flex items-center justify-center p-2 ${
+                            selectedTime === time ? "bg-black text-white rounded" : ""
+                          }`}
+                        >
                           {time}
                         </Label>
                       </div>
@@ -354,7 +365,7 @@ export default function Reservar() {
 
             {currentStep === 5 && (
               <div className="space-y-4">
-                <div className="mb-6 p-4 bg-yellow-100 rounded-lg border-4 border-black">
+                <div className="mb-4 sm:mb-6 p-4 bg-yellow-100 rounded-lg border-4 border-black">
                   <div className="text-sm text-gray-600">Reserva:</div>
                   <div className="font-bold">{selectedService?.nombre}</div>
                   <div className="text-sm text-gray-600">
@@ -369,7 +380,7 @@ export default function Reservar() {
                     type="text"
                     value={clientData.nombre}
                     onChange={(e) => setClientData({...clientData, nombre: e.target.value})}
-                    className="w-full p-3 border-4 border-black rounded-lg font-bold"
+                    className="w-full p-4 h-12 border-4 border-black rounded-lg font-bold text-base"
                     placeholder="Tu nombre"
                   />
                 </div>
@@ -379,7 +390,7 @@ export default function Reservar() {
                     type="tel"
                     value={clientData.telefono}
                     onChange={(e) => setClientData({...clientData, telefono: e.target.value})}
-                    className="w-full p-3 border-4 border-black rounded-lg font-bold"
+                    className="w-full p-4 h-12 border-4 border-black rounded-lg font-bold text-base"
                     placeholder="11 1234 5678"
                   />
                 </div>
@@ -389,7 +400,7 @@ export default function Reservar() {
                     type="email"
                     value={clientData.email}
                     onChange={(e) => setClientData({...clientData, email: e.target.value})}
-                    className="w-full p-3 border-4 border-black rounded-lg font-bold"
+                    className="w-full p-4 h-12 border-4 border-black rounded-lg font-bold text-base"
                     placeholder="tu@email.com"
                   />
                 </div>
@@ -398,34 +409,32 @@ export default function Reservar() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-6 sm:mt-8 gap-4">
           <Button
             variant="outline"
             onClick={prevStep}
             disabled={currentStep === 1}
-            className="bg-white border-4 border-black text-black hover:bg-gray-100 font-bold px-6"
+            className="bg-white border-4 border-black text-black hover:bg-gray-100 font-bold px-4 sm:px-6 min-h-12"
           >
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Anterior
+            <ArrowLeft className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">Anterior</span>
           </Button>
 
           {currentStep < 5 ? (
             <Button 
               onClick={nextStep} 
               disabled={!canProceed()} 
-              className="bg-black text-white hover:bg-gray-800 border-4 border-black font-bold px-6"
+              className="bg-black text-white hover:bg-gray-800 border-4 border-black font-bold px-6 sm:px-8 min-h-12"
             >
               Siguiente
-              <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           ) : (
             <Button
               onClick={handleBooking}
               disabled={!canProceed() || isSubmitting}
-              className="bg-green-600 text-white hover:bg-green-700 border-4 border-black font-bold px-6"
+              className="bg-green-600 text-white hover:bg-green-700 border-4 border-black font-bold px-6 sm:px-8 min-h-12"
             >
               {isSubmitting ? "Confirmando..." : "Confirmar Reserva"}
-              <Check className="w-4 h-4 ml-2" />
             </Button>
           )}
         </div>
