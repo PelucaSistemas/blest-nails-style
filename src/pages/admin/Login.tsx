@@ -1,33 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Lock, Eye, EyeOff, User } from 'lucide-react';
-import { login } from '@/lib/pocketbase';
+import { Lock } from 'lucide-react';
+import { loginWithPocketID, isAuthenticated } from '@/lib/hornerodb';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      await login(email, password);
-      navigate('/admin');
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('Email o contraseña incorrectos');
+  useEffect(() => {
+    // Auto-redirect if token is present in URL or already authenticated
+    const params = new URLSearchParams(window.location.search);
+      if (params.get('token') || isAuthenticated()) {
+      navigate({ pathname: '/admin', search: window.location.search });
     }
-    setLoading(false);
+  }, [navigate]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginWithPocketID();
   };
 
   return (
@@ -42,54 +33,11 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
-                  className="border-2 border-black pl-10"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="password">Contraseña</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="border-2 border-black pr-10"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-500 hover:text-black"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {error && (
-              <p className="text-red-500 text-sm text-center">{error}</p>
-            )}
-
             <Button
               type="submit"
-              disabled={loading}
-              className="w-full bg-black text-white hover:bg-gray-800 border-2 border-black font-bold"
+              className="w-full bg-black text-white hover:bg-gray-800 border-2 border-black font-bold h-12 text-lg"
             >
-              {loading ? 'Ingresando...' : 'Entrar'}
+              Iniciar Sesión con PocketID
             </Button>
           </form>
 

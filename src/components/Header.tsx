@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
-import { isAuthenticated, getCurrentUser } from "@/lib/pocketbase";
+import { isAuthenticated, getCurrentUser } from "@/lib/hornerodb";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +12,7 @@ const Header = () => {
     const checkAuth = () => {
       const auth = isAuthenticated();
       const user = getCurrentUser();
-      setIsAdmin(auth && user?.role === 'admin');
+      setIsAdmin(auth && user?.role_name === 'admin');
     };
     checkAuth();
   }, []);

@@ -14,7 +14,7 @@ import {
   LogOut,
   UserCircle
 } from 'lucide-react';
-import { logout, User } from '@/lib/pocketbase';
+import { logout } from '@/lib/hornerodb';
 
 const menuItems = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -27,7 +27,7 @@ const menuItems = [
 
 interface AdminLayoutProps {
   children: React.ReactNode;
-  user: User;
+  user: any;
 }
 
 export default function AdminLayout({ children, user }: AdminLayoutProps) {
@@ -42,7 +42,7 @@ export default function AdminLayout({ children, user }: AdminLayoutProps) {
 
   const filteredMenuItems = menuItems.filter(item => {
     if (!item.roles) return true;
-    return item.roles.includes(user.role);
+    return item.roles.includes(user.role_name);
   });
 
   return (
@@ -97,8 +97,8 @@ export default function AdminLayout({ children, user }: AdminLayoutProps) {
           <div className="flex items-center gap-3 px-2">
             <UserCircle className="w-8 h-8 text-gray-400" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">{user.nombre}</p>
-              <p className="text-xs text-gray-400 capitalize">{user.role}</p>
+              <p className="text-sm font-medium text-white truncate">{user.name || user.email}</p>
+              <p className="text-xs text-gray-400 capitalize">{user.role_name}</p>
             </div>
           </div>
           <button

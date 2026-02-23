@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { usePocketBase } from '@/hooks/usePocketBase';
+import { useHorneroDB } from '@/hooks/useHorneroDB';
 
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
   
-  const { records: servicios, loading: loadingServicios, fetchRecords: fetchServicios } = usePocketBase({
+  const { records: servicios, loading: loadingServicios, fetchRecords: fetchServicios } = useHorneroDB({
     collection: 'servicios',
     autoFetch: false,
   });
   
-  const { records: turnos, loading: loadingTurnos, fetchRecords: fetchTurnos } = usePocketBase({
+  const { records: turnos, loading: loadingTurnos, fetchRecords: fetchTurnos } = useHorneroDB({
     collection: 'turnos',
     autoFetch: false,
   });

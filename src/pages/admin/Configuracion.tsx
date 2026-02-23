@@ -2,14 +2,14 @@ import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { usePocketBase } from '@/hooks/usePocketBase';
+import { useHorneroDB } from '@/hooks/useHorneroDB';
 
 export default function Configuracion() {
-  const { records: servicios, fetchRecords: fetchServicios } = usePocketBase({
+  const { records: servicios, fetchRecords: fetchServicios } = useHorneroDB({
     collection: 'servicios',
     autoFetch: false,
   });
-  const { records: gastos, fetchRecords: fetchGastos } = usePocketBase({
+  const { records: gastos, fetchRecords: fetchGastos } = useHorneroDB({
     collection: 'gastos',
     autoFetch: false,
   });

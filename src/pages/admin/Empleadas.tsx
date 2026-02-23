@@ -10,7 +10,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger 
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { usePocketBase } from '@/hooks/usePocketBase';
+import { useHorneroDB } from '@/hooks/useHorneroDB';
 
 interface Empleada {
   id: string;
@@ -21,7 +21,7 @@ interface Empleada {
 }
 
 export default function Empleadas() {
-  const { records, loading, error, fetchRecords, createRecord, deleteRecord } = usePocketBase({
+  const { records, loading, error, fetchRecords, createRecord, deleteRecord } = useHorneroDB({
     collection: 'empleados',
     autoFetch: false,
   });

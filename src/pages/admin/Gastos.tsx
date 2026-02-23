@@ -10,7 +10,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger 
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { usePocketBase } from '@/hooks/usePocketBase';
+import { useHorneroDB } from '@/hooks/useHorneroDB';
 
 interface Gasto {
   id: string;
@@ -25,7 +25,7 @@ const CATEGORIAS_GASTOS = ['Alquiler', 'Insumos', 'Servicios', 'Impuestos', 'Otr
 const PERIODICIDADES = ['Único', 'Mensual', 'Semanal'];
 
 export default function Gastos() {
-  const { records, loading, error, fetchRecords, createRecord, deleteRecord } = usePocketBase({
+  const { records, loading, error, fetchRecords, createRecord, deleteRecord } = useHorneroDB({
     collection: 'gastos',
     autoFetch: false,
   });

@@ -10,7 +10,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger 
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { usePocketBase } from '@/hooks/usePocketBase';
+import { useHorneroDB } from '@/hooks/useHorneroDB';
 
 interface Turno {
   id: string;
@@ -23,7 +23,7 @@ interface Turno {
 }
 
 export default function Turnos() {
-  const { records, loading, error, fetchRecords, createRecord, updateRecord, deleteRecord } = usePocketBase({
+  const { records, loading, error, fetchRecords, createRecord, updateRecord, deleteRecord } = useHorneroDB({
     collection: 'turnos',
     autoFetch: false,
   });

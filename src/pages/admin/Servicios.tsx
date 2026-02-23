@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
 } from '@/components/ui/table';
-import { usePocketBase } from '@/hooks/usePocketBase';
+import { useHorneroDB } from '@/hooks/useHorneroDB';
 
 interface Servicio {
   id: string;
@@ -20,7 +20,7 @@ interface Servicio {
 const CATEGORIAS = ['manos', 'pies', 'cejas', 'pestanas', 'depilacion'];
 
 export default function Servicios() {
-  const { records, loading, error, fetchRecords } = usePocketBase({
+  const { records, loading, error, fetchRecords } = useHorneroDB({
     collection: 'servicios',
     autoFetch: false,
   });
