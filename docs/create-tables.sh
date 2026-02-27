@@ -1,79 +1,98 @@
 #!/bin/bash
 
-# Script para crear tablas en NocoDB
-# Uso: ./create-tables.sh
+# ===========================================
+# CREAR TABLAS EN HORNERODB - BLEST NAILS
+# ===========================================
 
-TOKEN="iSPQZ-_DKyE3gNqFJGkPwjEADQtrwnTzyfXw7ISU"
-BASE_ID="pm27oaltuuwfdbo"
-URL="https://nocodb.pelucasistemas.com.ar"
+# Read .env values automatically
+source "$(dirname "$0")/../.env"
 
-echo "=== Creando tabla Clientes ==="
-curl -X POST "$URL/api/v1/db/meta/tables" \
-  -H "Content-Type: application/json" \
-  -H "xc-token: $TOKEN" \
-  -d "{
-    \"base_id\": \"$BASE_ID\",
-    \"table_name\": \"Clientes\",
-    \"title\": \"Clientes\",
-    \"columns\": [
-      {\"column_name\": \"Nombre\", \"title\": \"Nombre\", \"uidt\": \"SingleLineText\", \"pk\": true},
-      {\"column_name\": \"Telefono\", \"title\": \"Telefono\", \"uidt\": \"PhoneNumber\"},
-      {\"column_name\": \"Email\", \"title\": \"Email\", \"uidt\": \"Email\"},
-      {\"column_name\": \"Notas\", \"title\": \"Notas\", \"uidt\": \"LongText\"},
-      {\"column_name\": \"TotalVisitas\", \"title\": \"TotalVisitas\", \"uidt\": \"Number\", \"np\": 10, \"ns\": 0}
-    ]
-  }"
+TOKEN="${VITE_API_KEY}"
+WORKSPACE_ID="${VITE_WORKSPACE_ID}"
+URL="${VITE_API_URL%/}"
 
-echo -e "\n\n=== Creando tabla Gastos ==="
-curl -X POST "$URL/api/v1/db/meta/tables" \
-  -H "Content-Type: application/json" \
-  -H "xc-token: $TOKEN" \
-  -d "{
-    \"base_id\": \"$BASE_ID\",
-    \"table_name\": \"Gastos\",
-    \"title\": \"Gastos\",
-    \"columns\": [
-      {\"column_name\": \"Categoria\", \"title\": \"Categoria\", \"uidt\": \"SingleSelect\", \"dtxp\": \"'Alquiler','Insumos','Servicios','Impuestos','Otros'\"},
-      {\"column_name\": \"Descripcion\", \"title\": \"Descripcion\", \"uidt\": \"SingleLineText\"},
-      {\"column_name\": \"Monto\", \"title\": \"Monto\", \"uidt\": \"Currency\", \"dtxp\": \"19,2\", \"cdf\": \"0\"},
-      {\"column_name\": \"Periodicidad\", \"title\": \"Periodicidad\", \"uidt\": \"SingleSelect\", \"dtxp\": \"'Unico','Mensual','Semanal'\"},
-      {\"column_name\": \"Fecha\", \"title\": \"Fecha\", \"uidt\": \"Date\", \"dtxp\": \"DD/MM/YYYY\"},
-      {\"column_name\": \"Comprobante\", \"title\": \"Comprobante\", \"uidt\": \"Attachment\"}
-    ]
-  }"
+echo "🔧 Creando tablas en HorneroDB..."
+echo "================================"
 
-echo -e "\n\n=== Creando tabla Empleadas ==="
-curl -X POST "$URL/api/v1/db/meta/tables" \
-  -H "Content-Type: application/json" \
-  -H "xc-token: $TOKEN" \
-  -d "{
-    \"base_id\": \"$BASE_ID\",
-    \"table_name\": \"Empleadas\",
-    \"title\": \"Empleadas\",
-    \"columns\": [
-      {\"column_name\": \"Nombre\", \"title\": \"Nombre\", \"uidt\": \"SingleLineText\", \"pk\": true},
-      {\"column_name\": \"Rol\", \"title\": \"Rol\", \"uidt\": \"SingleSelect\", \"dtxp\": \"'Manicurista','Recepcionista','Socia'\"},
-      {\"column_name\": \"ComisionPorcentaje\", \"title\": \"ComisionPorcentaje\", \"uidt\": \"Number\", \"np\": 5, \"ns\": 2, \"cdf\": \"0\"},
-      {\"column_name\": \"SueldoBase\", \"title\": \"SueldoBase\", \"uidt\": \"Currency\", \"dtxp\": \"19,2\", \"cdf\": \"0\"},
-      {\"column_name\": \"Horario\", \"title\": \"Horario\", \"uidt\": \"SingleLineText\"},
-      {\"column_name\": \"Activa\", \"title\": \"Activa\", \"uidt\": \"Checkbox\", \"cdf\": \"true\"}
-    ]
-  }"
+# Check if auth header needs 'Bearer ' prefix
+AUTH_HEADER="Bearer ${TOKEN#Bearer }"
 
-echo -e "\n\n=== Creando tabla Configuracion ==="
-curl -X POST "$URL/api/v1/db/meta/tables" \
-  -H "Content-Type: application/json" \
-  -H "xc-token: $TOKEN" \
-  -d "{
-    \"base_id\": \"$BASE_ID\",
-    \"table_name\": \"Configuracion\",
-    \"title\": \"Configuracion\",
-    \"columns\": [
-      {\"column_name\": \"Clave\", \"title\": \"Clave\", \"uidt\": \"SingleLineText\", \"pk\": true},
-      {\"column_name\": \"Valor\", \"title\": \"Valor\", \"uidt\": \"SingleLineText\"},
-      {\"column_name\": \"Descripcion\", \"title\": \"Descripcion\", \"uidt\": \"SingleLineText\"}
-    ]
-  }"
+create_table() {
+  local name=$1
+  local slug=$2
+  
+  local resp=$(curl -s -X POST "$URL/workspaces/$WORKSPACE_ID/tables" \
+    -H "Authorization: $AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -d "{\"name\": \"$name\", \"slug\": \"$slug\"}")
+    
+  echo "$resp" | grep -o '"id":"[^"]*"' | head -1 | cut -d '"' -f 4
+}
 
-echo -e "\n\n=== Proceso completado ==="
-echo "Verifica las tablas en NocoDB"
+create_column() {
+  local table_id=$1
+  local name=$2
+  local slug=$3
+  local field_type=$4
+
+  curl -s -X POST "$URL/workspaces/$WORKSPACE_ID/tables/$table_id/columns" \
+    -H "Authorization: $AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -d "{\"name\": \"$name\", \"slug\": \"$slug\", \"field_type\": \"$field_type\"}" > /dev/null
+}
+
+echo "📋 Creando tabla: Clientes..."
+CLIENTES_ID=$(create_table "Clientes" "clientes")
+if [ -n "$CLIENTES_ID" ] && [ "$CLIENTES_ID" != "null" ]; then
+  create_column "$CLIENTES_ID" "Nombre" "nombre" "text"
+  create_column "$CLIENTES_ID" "Telefono" "telefono" "text"
+  create_column "$CLIENTES_ID" "Email" "email" "email"
+  create_column "$CLIENTES_ID" "Notas" "notas" "long_text"
+  create_column "$CLIENTES_ID" "Total Visitas" "total_visitas" "integer"
+  echo "✅ Clientes creada (ID: $CLIENTES_ID)"
+else
+  echo "❌ Error al crear tabla Clientes"
+fi
+
+echo -e "\n📋 Creando tabla: Gastos..."
+GASTOS_ID=$(create_table "Gastos" "gastos")
+if [ -n "$GASTOS_ID" ] && [ "$GASTOS_ID" != "null" ]; then
+  create_column "$GASTOS_ID" "Categoria" "categoria" "select"
+  create_column "$GASTOS_ID" "Descripcion" "descripcion" "text"
+  create_column "$GASTOS_ID" "Monto" "monto" "float"
+  create_column "$GASTOS_ID" "Periodicidad" "periodicidad" "select"
+  create_column "$GASTOS_ID" "Fecha" "fecha" "date"
+  create_column "$GASTOS_ID" "Comprobante" "comprobante" "file"
+  echo "✅ Gastos creada (ID: $GASTOS_ID)"
+else
+  echo "❌ Error al crear tabla Gastos"
+fi
+
+echo -e "\n📋 Creando tabla: Empleadas..."
+EMPLEADAS_ID=$(create_table "Empleadas" "empleadas")
+if [ -n "$EMPLEADAS_ID" ] && [ "$EMPLEADAS_ID" != "null" ]; then
+  create_column "$EMPLEADAS_ID" "Nombre" "nombre" "text"
+  create_column "$EMPLEADAS_ID" "Rol" "rol" "select"
+  create_column "$EMPLEADAS_ID" "Comision Porcentaje" "comision_porcentaje" "number"
+  create_column "$EMPLEADAS_ID" "Sueldo Base" "sueldo_base" "float"
+  create_column "$EMPLEADAS_ID" "Horario" "horario" "text"
+  create_column "$EMPLEADAS_ID" "Activa" "activa" "boolean"
+  echo "✅ Empleadas creada (ID: $EMPLEADAS_ID)"
+else
+  echo "❌ Error al crear tabla Empleadas"
+fi
+
+echo -e "\n📋 Creando tabla: Configuracion..."
+CONFIG_ID=$(create_table "Configuracion" "configuracion")
+if [ -n "$CONFIG_ID" ] && [ "$CONFIG_ID" != "null" ]; then
+  create_column "$CONFIG_ID" "Clave" "clave" "text"
+  create_column "$CONFIG_ID" "Valor" "valor" "text"
+  create_column "$CONFIG_ID" "Descripcion" "descripcion" "text"
+  echo "✅ Configuracion creada (ID: $CONFIG_ID)"
+else
+  echo "❌ Error al crear tabla Configuracion"
+fi
+
+echo -e "\n================================"
+echo "✅ Proceso completado!"
+echo "================================"

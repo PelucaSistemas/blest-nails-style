@@ -1,6 +1,6 @@
-export const API_URL = 'http://localhost:8080/api/v1';
-export const WORKSPACE_ID = 'badcde1e-7dbc-4f83-961c-8ab522964df8'; // Replace with actual ID
-export const API_KEY = 'key_badcde1eLsvD6tg25stpUbNL3JdeZBMVh5xFkyIw'; // Replace with public Key
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
+export const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID || '';
+export const API_KEY = import.meta.env.VITE_API_KEY || '';
 
 // ---- Public Config Helpers ----
 const publicHeaders = {
