@@ -1,11 +1,11 @@
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
 
 export function getWorkspaceId(): string {
-    return localStorage.getItem('hornero_workspace_id') || import.meta.env.VITE_WORKSPACE_ID || 'badcde1e-7dbc-4f83-961c-8ab522964df8';
+    return import.meta.env.VITE_HORNERO_WORKSPACE_ID || localStorage.getItem('hornero_workspace_id') || import.meta.env.VITE_WORKSPACE_ID || 'badcde1e-7dbc-4f83-961c-8ab522964df8';
 }
 
 export function getApiKey(): string {
-    return localStorage.getItem('hornero_api_key') || import.meta.env.VITE_API_KEY || 'key_badcde1eLsvD6tg25stpUbNL3JdeZBMVh5xFkyIw';
+    return import.meta.env.VITE_HORNERO_API_KEY || localStorage.getItem('hornero_api_key') || import.meta.env.VITE_API_KEY || 'key_badcde1eLsvD6tg25stpUbNL3JdeZBMVh5xFkyIw';
 }
 
 export function setWorkspaceConfig(workspaceId: string, apiKey: string) {
