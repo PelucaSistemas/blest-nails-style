@@ -94,17 +94,13 @@ export default function Reservar() {
       const [hours, minutes] = selectedTime.split(":");
       fechaHora.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
-      const toHour = new Date(fechaHora);
-      toHour.setHours(toHour.getHours() + (selectedService?.duracion_minutos ? Math.ceil(selectedService.duracion_minutos / 60) : 1));
-
       await createTurno({
-        client_name: clientData.nombre,
-        client_phone: clientData.telefono,
-        client_email: clientData.email,
+        cliente_nombre: clientData.nombre,
+        cliente_telefono: clientData.telefono,
+        cliente_email: clientData.email,
         servicio_id: selectedService.id,
         empleado_id: selectedProfessional?.id || null, // Might be null
-        from: fechaHora.toISOString(),
-        to: toHour.toISOString(),
+        fecha_hora: fechaHora.toISOString(),
         estado: 'pendiente',
       });
       

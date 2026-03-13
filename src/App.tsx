@@ -15,7 +15,8 @@ import Servicios from "./pages/admin/Servicios";
 import Empleadas from "./pages/admin/Empleadas";
 import Gastos from "./pages/admin/Gastos";
 import Configuracion from "./pages/admin/Configuracion";
-import { isAuthenticated, getCurrentUser, fetchCurrentUser, setAuthToken } from "./lib/hornerodb";
+import { isAuthenticated, getCurrentUser, fetchCurrentUser, setAuthToken, getWorkspaceId, getApiKey } from "./lib/hornerodb";
+import Setup from "./pages/Setup";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,20 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   return <AdminLayout user={user}>{children}</AdminLayout>;
 };
 
+const DatabaseGuard = ({ children }: { children: React.ReactNode }) => {
+  const wsId = getWorkspaceId();
+  const apiKey = getApiKey();
+  const location = useLocation();
+
+  if (!wsId || !apiKey || wsId === 'badcde1e-7dbc-4f83-961c-8ab522964df8') {
+    if (location.pathname !== '/setup') {
+      return <Navigate to="/setup" replace />;
+    }
+  }
+
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -72,17 +87,21 @@ const App = () => (
       <Sonner />
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/reservar" element={<Reservar />} />
-          <Route path="/admin/login" element={<Login />} />
+          <Route path="/setup" element={<Setup />} />
+          
+          {/* Public Routes */}
+          <Route path="/" element={<DatabaseGuard><Index /></DatabaseGuard>} />
+          <Route path="/reservar" element={<DatabaseGuard><Reservar /></DatabaseGuard>} />
+          
+          <Route path="/admin/login" element={<DatabaseGuard><Login /></DatabaseGuard>} />
           
           {/* Admin Routes - Protected */}
-          <Route path="/admin" element={<AdminRoute><Dashboard /></AdminRoute>} />
-          <Route path="/admin/turnos" element={<AdminRoute><Turnos /></AdminRoute>} />
-          <Route path="/admin/servicios" element={<AdminRoute><Servicios /></AdminRoute>} />
-          <Route path="/admin/empleadas" element={<AdminRoute><Empleadas /></AdminRoute>} />
-          <Route path="/admin/gastos" element={<AdminRoute><Gastos /></AdminRoute>} />
-          <Route path="/admin/config" element={<AdminRoute>< Configuracion /></AdminRoute>} />
+          <Route path="/admin" element={<DatabaseGuard><AdminRoute><Dashboard /></AdminRoute></DatabaseGuard>} />
+          <Route path="/admin/turnos" element={<DatabaseGuard><AdminRoute><Turnos /></AdminRoute></DatabaseGuard>} />
+          <Route path="/admin/servicios" element={<DatabaseGuard><AdminRoute><Servicios /></AdminRoute></DatabaseGuard>} />
+          <Route path="/admin/empleadas" element={<DatabaseGuard><AdminRoute><Empleadas /></AdminRoute></DatabaseGuard>} />
+          <Route path="/admin/gastos" element={<DatabaseGuard><AdminRoute><Gastos /></AdminRoute></DatabaseGuard>} />
+          <Route path="/admin/config" element={<DatabaseGuard><AdminRoute>< Configuracion /></AdminRoute></DatabaseGuard>} />
           
           {/* Redirect old routes */}
           <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />

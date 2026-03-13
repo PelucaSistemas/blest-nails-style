@@ -1,13 +1,23 @@
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
-export const WORKSPACE_ID = import.meta.env.VITE_WORKSPACE_ID || '';
-export const API_KEY = import.meta.env.VITE_API_KEY || '';
+
+export function getWorkspaceId(): string {
+    return localStorage.getItem('hornero_workspace_id') || import.meta.env.VITE_WORKSPACE_ID || 'badcde1e-7dbc-4f83-961c-8ab522964df8';
+}
+
+export function getApiKey(): string {
+    return localStorage.getItem('hornero_api_key') || import.meta.env.VITE_API_KEY || 'key_badcde1eLsvD6tg25stpUbNL3JdeZBMVh5xFkyIw';
+}
+
+export function setWorkspaceConfig(workspaceId: string, apiKey: string) {
+    localStorage.setItem('hornero_workspace_id', workspaceId);
+    localStorage.setItem('hornero_api_key', apiKey);
+}
 
 // ---- Public Config Helpers ----
-const publicHeaders = {
-    'Authorization': API_KEY,
-    'X-Workspace-ID': WORKSPACE_ID
-};
-
+export const publicHeaders = () => ({
+    'Authorization': getApiKey(),
+    'X-Workspace-ID': getWorkspaceId()
+});
 // ---- Auth Helpers (PocketID) ----
 export function getAuthToken(): string | null {
     return localStorage.getItem('demo_admin_token');
@@ -66,8 +76,8 @@ export const adminHeaders = () => ({
 });
 
 export async function fetchServicios() {
-    const response = await fetch(`${API_URL}/workspaces/${WORKSPACE_ID}/data/servicios`, {
-        headers: publicHeaders
+    const response = await fetch(`${API_URL}/workspaces/${getWorkspaceId()}/data/servicios`, {
+        headers: publicHeaders()
     });
     if (!response.ok) {
         throw new Error('Failed to fetch services');
@@ -77,8 +87,8 @@ export async function fetchServicios() {
 }
 
 export async function fetchEmpleados() {
-    const response = await fetch(`${API_URL}/workspaces/${WORKSPACE_ID}/data/empleados`, {
-        headers: publicHeaders
+    const response = await fetch(`${API_URL}/workspaces/${getWorkspaceId()}/data/empleados`, {
+        headers: publicHeaders()
     });
     if (!response.ok) {
         throw new Error('Failed to fetch employees');
@@ -88,11 +98,11 @@ export async function fetchEmpleados() {
 }
 
 export async function createTurno(data: any) {
-    const response = await fetch(`${API_URL}/workspaces/${WORKSPACE_ID}/data/turnos`, {
+    const response = await fetch(`${API_URL}/workspaces/${getWorkspaceId()}/data/turnos`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            ...publicHeaders
+            ...publicHeaders()
         },
         body: JSON.stringify(data)
     });

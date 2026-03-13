@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { API_URL, WORKSPACE_ID, adminHeaders } from '@/lib/hornerodb';
+import { API_URL, getWorkspaceId, adminHeaders } from '@/lib/hornerodb';
 
 interface DBRecord {
     id: string;
@@ -21,7 +21,7 @@ export function useHorneroDB({ collection, autoFetch = false }: UseDBOptions) {
         setError(null);
         try {
             const qs = query ? `?query=${encodeURIComponent(query)}` : '';
-            const response = await fetch(`${API_URL}/workspaces/${WORKSPACE_ID}/data/${collection}${qs}`, {
+            const response = await fetch(`${API_URL}/workspaces/${getWorkspaceId()}/data/${collection}${qs}`, {
                 headers: adminHeaders()
             });
             if (!response.ok) throw new Error('Error al cargar datos');
@@ -39,7 +39,7 @@ export function useHorneroDB({ collection, autoFetch = false }: UseDBOptions) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${API_URL}/workspaces/${WORKSPACE_ID}/data/${collection}`, {
+            const response = await fetch(`${API_URL}/workspaces/${getWorkspaceId()}/data/${collection}`, {
                 method: 'POST',
                 headers: adminHeaders(),
                 body: JSON.stringify(record)
@@ -60,7 +60,7 @@ export function useHorneroDB({ collection, autoFetch = false }: UseDBOptions) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${API_URL}/workspaces/${WORKSPACE_ID}/data/${collection}/${id}`, {
+            const response = await fetch(`${API_URL}/workspaces/${getWorkspaceId()}/data/${collection}/${id}`, {
                 method: 'PATCH',
                 headers: adminHeaders(),
                 body: JSON.stringify(record)
@@ -81,7 +81,7 @@ export function useHorneroDB({ collection, autoFetch = false }: UseDBOptions) {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${API_URL}/workspaces/${WORKSPACE_ID}/data/${collection}/${id}`, {
+            const response = await fetch(`${API_URL}/workspaces/${getWorkspaceId()}/data/${collection}/${id}`, {
                 method: 'DELETE',
                 headers: adminHeaders(),
             });

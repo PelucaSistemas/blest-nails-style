@@ -1,0 +1,275 @@
+{
+  "workspace": {
+    "id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+    "name": "Blest Nails",
+    "slug": "blest-nails"
+  },
+  "tables": [
+    {
+      "id": "2e14aba8-f063-4db4-a02a-3980c497624e",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Servicios",
+      "slug": "servicios"
+    },
+    {
+      "id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Turnos",
+      "slug": "turnos"
+    },
+    {
+      "id": "06ec665a-b9d2-43eb-80e3-351957e2254a",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Empleados",
+      "slug": "empleados"
+    },
+    {
+      "id": "9e3c4195-ba3f-4a29-baf3-7212e28628b5",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Gastos",
+      "slug": "gastos"
+    }
+  ],
+  "columns": [
+    {
+      "id": "0dfed962-0b76-491b-8151-43e9406dee10",
+      "table_id": "2e14aba8-f063-4db4-a02a-3980c497624e",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Categoría",
+      "slug": "categoria",
+      "field_type": "text"
+    },
+    {
+      "id": "cfda8c5a-5f2f-4455-beaa-48e0a34e4280",
+      "table_id": "2e14aba8-f063-4db4-a02a-3980c497624e",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Nombre",
+      "slug": "nombre",
+      "field_type": "text"
+    },
+    {
+      "id": "c35ca5ad-e655-467e-beba-dac48e3b7dbd",
+      "table_id": "2e14aba8-f063-4db4-a02a-3980c497624e",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Descripción",
+      "slug": "descripcion",
+      "field_type": "text"
+    },
+    {
+      "id": "c93ec392-4deb-4265-a8ca-35da9719a01e",
+      "table_id": "2e14aba8-f063-4db4-a02a-3980c497624e",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Duración (Minutos)",
+      "slug": "duracion_minutos",
+      "field_type": "number"
+    },
+    {
+      "id": "b34ebb63-10ad-4ca6-a00f-d4298faff718",
+      "table_id": "2e14aba8-f063-4db4-a02a-3980c497624e",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Precio",
+      "slug": "precio",
+      "field_type": "number"
+    },
+    {
+      "id": "5ec3808b-f3d6-4c32-8ab2-ae9a7320819e",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Cliente Nombre",
+      "slug": "cliente_nombre",
+      "field_type": "text"
+    },
+    {
+      "id": "4e43c7b5-5f1a-4b3d-ad92-2cb57fffb948",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Cliente Teléfono",
+      "slug": "cliente_telefono",
+      "field_type": "text"
+    },
+    {
+      "id": "f38c5dcd-a4a6-4744-9265-1ba0f25c69d0",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Cliente Email",
+      "slug": "cliente_email",
+      "field_type": "email"
+    },
+    {
+      "id": "e56a729c-ec73-48ce-b4f7-a00e3b54bc96",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Fecha y Hora",
+      "slug": "fecha_hora",
+      "field_type": "datetime"
+    },
+    {
+      "id": "2dc43c8a-3d48-4d45-917b-29858b559d80",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Estado",
+      "slug": "estado",
+      "field_type": "text"
+    },
+    {
+      "id": "855fb36f-79c6-4ea1-aa08-78007564f061",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Observaciones",
+      "slug": "observaciones",
+      "field_type": "text"
+    },
+    {
+      "id": "1aab2b8f-7c1a-4dff-bcda-3f88f01bda82",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Servicio",
+      "slug": "servicio_id",
+      "field_type": "text"
+    },
+    {
+      "id": "7b89f81a-0fd0-4b52-9f33-b1d12fc7e218",
+      "table_id": "9636b0fa-f908-48bb-aa89-0273cc662755",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Empleado",
+      "slug": "empleado_id",
+      "field_type": "text"
+    },
+    {
+      "id": "ee41c4cd-ea37-4cb4-9666-83c762b7ef34",
+      "table_id": "06ec665a-b9d2-43eb-80e3-351957e2254a",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Nombre",
+      "slug": "nombre",
+      "field_type": "text"
+    },
+    {
+      "id": "d4fbc261-9867-4969-9783-3fcc55fb6b09",
+      "table_id": "06ec665a-b9d2-43eb-80e3-351957e2254a",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Email",
+      "slug": "email",
+      "field_type": "email"
+    },
+    {
+      "id": "3a6997f5-1c41-4620-8c61-6e03323547fa",
+      "table_id": "06ec665a-b9d2-43eb-80e3-351957e2254a",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Teléfono",
+      "slug": "telefono",
+      "field_type": "text"
+    },
+    {
+      "id": "7fcf52d3-f2f5-4939-a3dd-509184321a4d",
+      "table_id": "06ec665a-b9d2-43eb-80e3-351957e2254a",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "User ID",
+      "slug": "user_id",
+      "field_type": "text"
+    },
+    {
+      "id": "f2d5ed66-428e-483e-9dd5-1664a8992ec2",
+      "table_id": "9e3c4195-ba3f-4a29-baf3-7212e28628b5",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Descripción",
+      "slug": "descripcion",
+      "field_type": "text"
+    },
+    {
+      "id": "06ae81aa-5031-4266-8216-b420514b8ff6",
+      "table_id": "9e3c4195-ba3f-4a29-baf3-7212e28628b5",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Monto",
+      "slug": "monto",
+      "field_type": "number"
+    },
+    {
+      "id": "d948429f-746b-4d86-bbbc-77dfa162351a",
+      "table_id": "9e3c4195-ba3f-4a29-baf3-7212e28628b5",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Categoría",
+      "slug": "categoria",
+      "field_type": "text"
+    },
+    {
+      "id": "522d3bef-f2ba-444e-a61f-b23c86a2f849",
+      "table_id": "9e3c4195-ba3f-4a29-baf3-7212e28628b5",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Fecha",
+      "slug": "fecha",
+      "field_type": "datetime"
+    },
+    {
+      "id": "6d1dfccc-0055-4224-baab-f0ae8214270d",
+      "table_id": "9e3c4195-ba3f-4a29-baf3-7212e28628b5",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "Periodicidad",
+      "slug": "periodicidad",
+      "field_type": "text"
+    }
+  ],
+  "roles": [
+    {
+      "id": "11fda81d-69cf-44ea-ac52-cb8127c038b5",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "admin",
+      "permissions": {
+        "servicios": {
+          "create": "all",
+          "read": "all",
+          "update": "all",
+          "delete": "all"
+        },
+        "turnos": {
+          "create": "all",
+          "read": "all",
+          "update": "all",
+          "delete": "all"
+        },
+        "empleados": {
+          "create": "all",
+          "read": "all",
+          "update": "all",
+          "delete": "all"
+        },
+        "gastos": {
+          "create": "all",
+          "read": "all",
+          "update": "all",
+          "delete": "all"
+        }
+      }
+    },
+    {
+      "id": "d5ff25f5-9ad7-4060-aa47-61febf38a850",
+      "workspace_id": "227f39bb-eb43-427b-bf13-288c4569a3dd",
+      "name": "public",
+      "permissions": {
+        "servicios": {
+          "create": "none",
+          "read": "all",
+          "update": "none",
+          "delete": "none"
+        },
+        "turnos": {
+          "create": "all",
+          "read": "none",
+          "update": "none",
+          "delete": "none"
+        },
+        "empleados": {
+          "create": "none",
+          "read": "all",
+          "update": "none",
+          "delete": "none"
+        },
+        "gastos": {
+          "create": "none",
+          "read": "none",
+          "update": "none",
+          "delete": "none"
+        }
+      }
+    }
+  ]
+}
