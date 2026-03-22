@@ -15,7 +15,7 @@ export function setWorkspaceConfig(workspaceId: string, apiKey: string) {
 
 // ---- Public Config Helpers ----
 export const publicHeaders = () => ({
-    'Authorization': getApiKey(),
+    'Authorization': `Bearer ${getApiKey()}`,
     'X-Workspace-ID': getWorkspaceId()
 });
 // ---- Auth Helpers (PocketID) ----

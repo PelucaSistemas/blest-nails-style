@@ -173,7 +173,7 @@ export default function Reservar() {
 
       <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
         {/* Step Indicators - Always visible on mobile */}
-        <div className="mb-6 sm:mb-8 overflow-x-auto">
+        <div className="mb-6 sm:mb-8 overflow-x-scroll">
           <div className="flex items-center justify-start sm:justify-center min-w-max pb-2">
             {[
               { number: 1, title: "Servicio", icon: Sparkles },

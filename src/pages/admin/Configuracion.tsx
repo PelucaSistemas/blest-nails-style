@@ -172,7 +172,7 @@ export default function Configuracion() {
           <CardTitle>Fórmula de Cálculo</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre className="bg-gray-100 p-4 rounded border-2 border-black text-sm overflow-x-auto">
+          <pre className="bg-gray-100 p-4 rounded border-2 border-black text-sm overflow-x-scroll">
 {`Precio = CostoInsumos + CostoLaboral + Impuestos + Ganancia
 
 Donde:
